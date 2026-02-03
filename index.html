@@ -724,6 +724,13 @@
                     <label>Don’t fill this out: <input name="bot-field"></label>
                 </p>
                 <input 
+                    type="text" 
+                    name="name"
+                    class="email-input" 
+                    placeholder="Your name"
+                    id="nameInput"
+                >
+                <input 
                     type="email" 
                     name="email"
                     class="email-input" 
@@ -750,25 +757,7 @@
             Questions? Reach us at <a href="mailto:growmedia.hq@gmail.com">growmedia.hq@gmail.com</a>
         </p>
         
-        <!-- Contact Form (Netlify) -->
-        <section class="contact-section">
-            <h3>Contact Us</h3>
-            <form name="contact" class="form-wrapper" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="/success.html">
-                <input type="hidden" name="form-name" value="contact">
-                <p style="display:none;">
-                    <label>Don't fill this out: <input name="bot-field"></label>
-                </p>
-                <p>
-                    <label>Name <input type="text" name="name" /></label>
-                </p>
-                <p>
-                    <label>Email <input type="email" name="email" /></label>
-                </p>
-                <p>
-                    <button type="submit" class="notify-btn">Send</button>
-                </p>
-            </form>
-        </section>
+        
     </div>
 
     <!-- Interaction Hint -->
@@ -856,7 +845,9 @@
         document.getElementById('notifyForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
+            const nameInput = document.getElementById('nameInput');
             const emailInput = document.getElementById('emailInput');
+            const name = nameInput ? nameInput.value : '';
             const email = emailInput.value;
 
             if (email) {
@@ -874,12 +865,13 @@
                 button.appendChild(ripple);
                 setTimeout(() => ripple.remove(), 600);
 
-                console.log('Email submitted:', email);
+                console.log('Notify submitted:', { name, email });
 
                 // Show success message (will be visible briefly before redirect)
                 document.getElementById('successMessage').classList.add('show');
 
-                // Reset form value locally
+                // Reset form values locally
+                if (nameInput) nameInput.value = '';
                 emailInput.value = '';
 
                 // Hide success message after 5 seconds
