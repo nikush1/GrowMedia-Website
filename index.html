@@ -443,6 +443,18 @@
             display: block;
         }
 
+        /* Form error message */
+        .form-error {
+            display: none;
+            color: #FF3366;
+            font-weight: 700;
+            margin-top: 1rem;
+        }
+
+        .form-error.show {
+            display: block;
+        }
+
         /* Social Links */
         .social-links {
             display: flex;
@@ -654,9 +666,42 @@
                 opacity: 0;
             }
         }
+
+        /* Page loader */
+        #pageLoader {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(180deg, #000000, rgba(10,10,10,0.95));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        #pageLoader.fade-out {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-spinner {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: 4px solid rgba(204,255,0,0.12);
+            border-top-color: var(--electric-lime);
+            animation: loader-spin 0.9s linear infinite;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+        }
+
+        @keyframes loader-spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
+    <!-- Page loader -->
+    <div id="pageLoader" aria-hidden="false">
+        <div class="loader-spinner" aria-hidden="true"></div>
+    </div>
     <!-- Custom Cursor -->
     <div class="custom-cursor"></div>
     <div class="cursor-follower"></div>
@@ -718,7 +763,7 @@
         <!-- Email Notification Form -->
         <div class="notify-form">
             <label class="form-label">Get notified when we launch</label>
-            <form id="notifyForm" name="notifyForm" class="form-wrapper" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="/success.html">
+            <form id="notifyForm" name="notifyForm" class="form-wrapper" method="POST" data-netlify="true" data-netlify-honeypot="bot-field">
                 <input type="hidden" name="form-name" value="notifyForm">
                 <p style="display:none;">
                     <label>Don’t fill this out: <input name="bot-field"></label>
@@ -743,6 +788,7 @@
             <p class="success-message" id="successMessage">
                 ✓ You're on the list! We'll notify you when we launch.
             </p>
+            <p class="form-error" id="errorMessage"></p>
         </div>
 
         <!-- Social Links -->
@@ -845,44 +891,50 @@
         document.getElementById('notifyForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
-            const nameInput = document.getElementById('nameInput');
-            const emailInput = document.getElementById('emailInput');
+            const form = this;
+            const nameInput = form.querySelector('#nameInput');
+            const emailInput = form.querySelector('#emailInput');
             const name = nameInput ? nameInput.value : '';
-            const email = emailInput.value;
+            const email = emailInput ? emailInput.value : '';
 
-            if (email) {
-                // Create ripple effect
-                const button = this.querySelector('.notify-btn');
-                const ripple = document.createElement('span');
-                ripple.className = 'ripple';
+            if (!email) return;
 
-                const rect = button.getBoundingClientRect();
-                const size = Math.max(rect.width, rect.height);
-                ripple.style.width = ripple.style.height = size + 'px';
-                ripple.style.left = e.clientX - rect.left - size/2 + 'px';
-                ripple.style.top = e.clientY - rect.top - size/2 + 'px';
+            // Create ripple effect
+            const button = form.querySelector('.notify-btn');
+            const ripple = document.createElement('span');
+            ripple.className = 'ripple';
 
-                button.appendChild(ripple);
-                setTimeout(() => ripple.remove(), 600);
+            const rect = button.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = e.clientX - rect.left - size/2 + 'px';
+            ripple.style.top = e.clientY - rect.top - size/2 + 'px';
 
-                console.log('Notify submitted:', { name, email });
+            button.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 600);
 
-                // Show success message (will be visible briefly before redirect)
-                document.getElementById('successMessage').classList.add('show');
-
-                // (Don't clear inputs before submitting — Netlify needs their values)
-
-                // Hide success message after 5 seconds
-                setTimeout(() => {
-                    document.getElementById('successMessage').classList.remove('show');
-                }, 5000);
-
-                // Submit the form so Netlify can capture it.
-                // Use submit() (does not re-trigger the submit event) after a short delay to allow ripple animation.
-                setTimeout(() => {
-                    this.submit();
-                }, 350);
+            // Prepare form data for Netlify (AJAX POST)
+            const formData = new FormData(form);
+            // Ensure form-name is present (hidden input exists)
+            const params = new URLSearchParams();
+            for (const pair of formData.entries()) {
+                params.append(pair[0], pair[1]);
             }
+
+            fetch('/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: params.toString()
+            }).then(() => {
+                console.log('Notify submitted:', { name, email });
+                // Show your custom success message
+                document.getElementById('successMessage').classList.add('show');
+                setTimeout(() => document.getElementById('successMessage').classList.remove('show'), 5000);
+                form.reset();
+            }).catch((err) => {
+                console.error('Form submission error:', err);
+                alert('Submission failed — please try again.');
+            });
         });
 
         // Create Floating Particles
@@ -1009,6 +1061,16 @@
                     setTimeout(() => toast.remove(), 200);
                 }, 1800);
             });
+        });
+
+        // Hide page loader when fully loaded
+        window.addEventListener('load', function() {
+            const loader = document.getElementById('pageLoader');
+            if (!loader) return;
+            loader.classList.add('fade-out');
+            setTimeout(() => {
+                if (loader && loader.parentNode) loader.parentNode.removeChild(loader);
+            }, 600);
         });
     </script>
 </body>
