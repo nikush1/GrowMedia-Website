@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GrowMedia - Coming Soon</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --electric-lime: #CCFF00;
+            --deep-black: #0A0A0A;
+            --pure-white: #FFFFFF;
+            --steel-gray: #1A1A1A;
+            --soft-gray: #CCCCCC;
+            --dark-gray: #999999;
+            --accent-red: #FF3366;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Syne', sans-serif;
+            background: var(--deep-black);
+            color: var(--pure-white);
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            cursor: none;
+        }
+
+        /* Custom Cursor */
+        .custom-cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--electric-lime);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: all 0.15s ease;
+            transform: translate(-50%, -50%);
+        }
+
+        .cursor-follower {
+            width: 8px;
+            height: 8px;
+            background: var(--electric-lime);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            transition: all 0.1s ease;
+            transform: translate(-50%, -50%);
+        }
+
+        body:hover .custom-cursor {
+            width: 40px;
+            height: 40px;
+        }
+
+        .hover-active .custom-cursor {
+            width: 60px;
+            height: 60px;
+            background: rgba(204, 255, 0, 0.1);
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .gradient-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.3;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .gradient-orb.interactive {
+            cursor: pointer;
+            animation: none;
+        }
+
+        .gradient-orb.interactive:hover {
+            opacity: 0.5;
+            filter: blur(100px);
+            transform: scale(1.2) !important;
+        }
+
+        .orb-1 {
+            width: 500px;
+            height: 500px;
+            background: var(--electric-lime);
+            top: -10%;
+            left: -10%;
+        }
+
+        .orb-2 {
+            width: 400px;
+            height: 400px;
+            background: var(--accent-red);
+            bottom: -10%;
+            right: -10%;
+        }
+
+        .orb-3 {
+            width: 350px;
+            height: 350px;
+            background: #8B5CF6;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Noise Overlay */
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.04;
+            z-index: 1;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Grid Pattern */
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(204, 255, 0, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(204, 255, 0, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Main Container */
+        .container {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            max-width: 900px;
+            padding: 2rem;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Logo */
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 3rem;
+            animation: fadeInUp 1s ease-out 0.2s both;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+            text-shadow: 0 0 30px rgba(204, 255, 0, 0.5);
+        }
+
+        .logo span {
+            color: var(--electric-lime);
+        }
+
+        /* Main Heading */
+        h1 {
+            font-size: clamp(3rem, 10vw, 7rem);
+            font-weight: 800;
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        h1 .word {
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        h1 .word:hover {
+            color: var(--electric-lime);
+            transform: translateY(-10px) rotate(-2deg);
+            text-shadow: 0 10px 30px rgba(204, 255, 0, 0.5);
+        }
+
+        h1 .highlight {
+            color: var(--electric-lime);
+            display: inline-block;
+            position: relative;
+        }
+
+        h1 .highlight::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: var(--electric-lime);
+            opacity: 0.2;
+            transition: all 0.3s ease;
+        }
+
+        h1 .highlight:hover::after {
+            height: 100%;
+            opacity: 0.3;
+        }
+
+        /* Subtitle */
+        .subtitle {
+            font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+            color: var(--soft-gray);
+            margin-bottom: 1rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeInUp 1s ease-out 0.4s both;
+        }
+
+        .launch-date {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--electric-lime);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 4rem;
+            animation: fadeInUp 1s ease-out 0.5s both, pulse 2s ease-in-out infinite;
+        }
+
+        /* Countdown Timer */
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 4rem;
+            animation: fadeInUp 1s ease-out 0.6s both;
+            flex-wrap: wrap;
+        }
+
+        .countdown-item {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(204, 255, 0, 0.1);
+            border-radius: 20px;
+            padding: 2rem 2.5rem;
+            min-width: 140px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .countdown-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(204, 255, 0, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .countdown-item:hover::before {
+            left: 100%;
+        }
+
+        .countdown-item:hover {
+            transform: translateY(-10px) scale(1.05);
+            border-color: var(--electric-lime);
+            box-shadow: 0 20px 40px rgba(204, 255, 0, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .countdown-number {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--electric-lime);
+            letter-spacing: -0.02em;
+            display: block;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .countdown-item:hover .countdown-number {
+            transform: scale(1.1);
+            text-shadow: 0 0 20px rgba(204, 255, 0, 0.5);
+        }
+
+        .countdown-label {
+            font-size: 0.85rem;
+            color: var(--dark-gray);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .countdown-item:hover .countdown-label {
+            color: var(--soft-gray);
+        }
+
+        /* Email Form */
+        .notify-form {
+            max-width: 500px;
+            margin: 0 auto 3rem;
+            animation: fadeInUp 1s ease-out 0.7s both;
+        }
+
+        .form-label {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .form-wrapper {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .email-input {
+            flex: 1;
+            min-width: 250px;
+            padding: 1.2rem 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            color: var(--pure-white);
+            font-size: 1rem;
+            font-family: 'Syne', sans-serif;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .email-input::placeholder {
+            color: var(--dark-gray);
+        }
+
+        .email-input:focus {
+            border-color: var(--electric-lime);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 30px rgba(204, 255, 0, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .notify-btn {
+            padding: 1.2rem 2.5rem;
+            background: var(--electric-lime);
+            color: var(--deep-black);
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: 'Syne', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .notify-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: var(--pure-white);
+            transform: translate(-50%, -50%);
+            transition: width 0.5s ease, height 0.5s ease;
+        }
+
+        .notify-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .notify-btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .notify-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(204, 255, 0, 0.4);
+        }
+
+        .notify-btn:active {
+            transform: translateY(-1px);
+        }
+
+        /* Success Message */
+        .success-message {
+            display: none;
+            color: var(--electric-lime);
+            font-weight: 600;
+            margin-top: 1rem;
+            animation: fadeInUp 0.5s ease-out, pulse 2s ease-in-out infinite;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        /* Social Links */
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease-out 0.8s both;
+        }
+
+        .social-link {
+            color: var(--soft-gray);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .social-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--electric-lime);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .social-link:hover {
+            color: var(--electric-lime);
+            transform: translateY(-5px);
+            text-shadow: 0 5px 15px rgba(204, 255, 0, 0.3);
+        }
+
+        .social-link:hover::after {
+            width: 100%;
+        }
+
+        /* Contact Info */
+        .contact-info {
+            color: var(--dark-gray);
+            font-size: 0.9rem;
+            animation: fadeInUp 1s ease-out 0.9s both;
+        }
+
+        .contact-info a {
+            color: var(--soft-gray);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .contact-info a:hover {
+            color: var(--electric-lime);
+        }
+
+        /* Floating Particles */
+        .particle {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: var(--electric-lime);
+            border-radius: 50%;
+            opacity: 0;
+            z-index: 5;
+            animation: particleFloat 10s infinite;
+            box-shadow: 0 0 10px var(--electric-lime);
+        }
+
+        @keyframes particleFloat {
+            0% {
+                opacity: 0;
+                transform: translateY(0) translateX(0);
+            }
+            10% {
+                opacity: 0.8;
+            }
+            90% {
+                opacity: 0.8;
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100vh) translateX(50px);
+            }
+        }
+
+        /* Interactive Elements Indicator */
+        .interaction-hint {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.85rem;
+            color: var(--dark-gray);
+            font-family: 'JetBrains Mono', monospace;
+            z-index: 100;
+            animation: fadeInUp 1s ease-out 1s both, pulse 2s ease-in-out infinite;
+            text-align: center;
+        }
+
+        /* Click Effect */
+        .click-effect {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--electric-lime);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            animation: clickExpand 0.6s ease-out forwards;
+        }
+
+        @keyframes clickExpand {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(3);
+                opacity: 0;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .custom-cursor,
+            .cursor-follower {
+                display: none;
+            }
+
+            body {
+                cursor: auto;
+            }
+
+            .logo {
+                font-size: 2rem;
+                margin-bottom: 2rem;
+            }
+
+            .countdown {
+                gap: 1rem;
+            }
+
+            .countdown-item {
+                padding: 1.5rem 1.8rem;
+                min-width: 110px;
+            }
+
+            .countdown-number {
+                font-size: 2.5rem;
+            }
+
+            .form-wrapper {
+                flex-direction: column;
+            }
+
+            .email-input {
+                min-width: 100%;
+            }
+
+            .notify-btn {
+                width: 100%;
+            }
+
+            .social-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            h1 .highlight::after {
+                height: 4px;
+            }
+
+            .interaction-hint {
+                display: none;
+            }
+        }
+
+        /* Pulse Animation */
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        /* Ripple Effect */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(204, 255, 0, 0.3);
+            transform: scale(0);
+            animation: rippleEffect 0.6s ease-out;
+            pointer-events: none;
+        }
+
+        @keyframes rippleEffect {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Custom Cursor -->
+    <div class="custom-cursor"></div>
+    <div class="cursor-follower"></div>
+
+    <!-- Background Animation -->
+    <div class="bg-animation">
+        <div class="gradient-orb orb-1 interactive"></div>
+        <div class="gradient-orb orb-2 interactive"></div>
+        <div class="gradient-orb orb-3 interactive"></div>
+    </div>
+
+    <!-- Noise Overlay -->
+    <div class="noise-overlay"></div>
+
+    <!-- Grid Overlay -->
+    <div class="grid-overlay"></div>
+
+    <!-- Floating Particles -->
+    <div id="particles"></div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Logo -->
+        <div class="logo">Grow<span>Media</span></div>
+
+        <!-- Main Heading -->
+        <h1>
+            <span class="word">Something</span> <span class="word highlight">Big</span><br>
+            <span class="word">Is</span> <span class="word">Coming</span>
+        </h1>
+
+        <!-- Subtitle -->
+        <p class="subtitle">
+            We're building the future of attention-driven growth. High-converting creatives, viral content systems, and visual strategies that actually work.
+        </p>
+
+        <p class="launch-date">LAUNCHING Feb 15, 2026</p>
+
+        <!-- Countdown Timer -->
+        <div class="countdown">
+            <div class="countdown-item">
+                <span class="countdown-number" id="days">00</span>
+                <span class="countdown-label">Days</span>
+            </div>
+            <div class="countdown-item">
+                <span class="countdown-number" id="hours">00</span>
+                <span class="countdown-label">Hours</span>
+            </div>
+            <div class="countdown-item">
+                <span class="countdown-number" id="minutes">00</span>
+                <span class="countdown-label">Minutes</span>
+            </div>
+            <div class="countdown-item">
+                <span class="countdown-number" id="seconds">00</span>
+                <span class="countdown-label">Seconds</span>
+            </div>
+        </div>
+
+        <!-- Email Notification Form -->
+        <div class="notify-form">
+            <label class="form-label">Get notified when we launch</label>
+            <form id="notifyForm" name="notifyForm" class="form-wrapper" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="/success.html">
+                <input type="hidden" name="form-name" value="notifyForm">
+                <p style="display:none;">
+                    <label>Don’t fill this out: <input name="bot-field"></label>
+                </p>
+                <input 
+                    type="email" 
+                    name="email"
+                    class="email-input" 
+                    placeholder="Enter your email" 
+                    required
+                    id="emailInput"
+                >
+                <button type="submit" class="notify-btn"><span>Notify Me</span></button>
+            </form>
+            <p class="success-message" id="successMessage">
+                ✓ You're on the list! We'll notify you when we launch.
+            </p>
+        </div>
+
+        <!-- Social Links -->
+        <div class="social-links">
+            <a href="#" class="social-link">Instagram</a>
+            <a href="#" class="social-link">Twitter</a>
+            <a href="#" class="social-link">LinkedIn</a>
+        </div>
+
+        <!-- Contact Info -->
+        <p class="contact-info">
+            Questions? Reach us at <a href="mailto:growmedia.hq@gmail.com">growmedia.hq@gmail.com</a>
+        </p>
+    </div>
+
+    <!-- Interaction Hint -->
+    
+
+    <script>
+        // Custom Cursor
+        const cursor = document.querySelector('.custom-cursor');
+        const cursorFollower = document.querySelector('.cursor-follower');
+        
+        let mouseX = 0, mouseY = 0;
+        let followerX = 0, followerY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            
+            cursor.style.left = mouseX + 'px';
+            cursor.style.top = mouseY + 'px';
+        });
+
+        // Smooth follower animation
+        function animateFollower() {
+            followerX += (mouseX - followerX) * 0.1;
+            followerY += (mouseY - followerY) * 0.1;
+            
+            cursorFollower.style.left = followerX + 'px';
+            cursorFollower.style.top = followerY + 'px';
+            
+            requestAnimationFrame(animateFollower);
+        }
+        animateFollower();
+
+        // Hover effects for interactive elements
+        const interactiveElements = document.querySelectorAll('a, button, input, .countdown-item, .logo, .word, .gradient-orb');
+        
+        interactiveElements.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                document.body.classList.add('hover-active');
+            });
+            
+            el.addEventListener('mouseleave', () => {
+                document.body.classList.remove('hover-active');
+            });
+        });
+
+        // Click effect
+        document.addEventListener('click', (e) => {
+            const clickEffect = document.createElement('div');
+            clickEffect.className = 'click-effect';
+            clickEffect.style.left = e.clientX + 'px';
+            clickEffect.style.top = e.clientY + 'px';
+            document.body.appendChild(clickEffect);
+            
+            setTimeout(() => clickEffect.remove(), 600);
+        });
+
+        // Countdown Timer
+        const launchDate = new Date('February 15, 2026 00:00:00').getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = launchDate - now;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById('days').textContent = String(days).padStart(2, '0');
+            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+
+            if (distance < 0) {
+                clearInterval(countdownInterval);
+                document.querySelector('.countdown').innerHTML = '<h2 style="color: var(--electric-lime);">We\'re Live!</h2>';
+            }
+        }
+
+        const countdownInterval = setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // Email Form Submission with Ripple
+        document.getElementById('notifyForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const emailInput = document.getElementById('emailInput');
+            const email = emailInput.value;
+
+            if (email) {
+                // Create ripple effect
+                const button = this.querySelector('.notify-btn');
+                const ripple = document.createElement('span');
+                ripple.className = 'ripple';
+
+                const rect = button.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = e.clientX - rect.left - size/2 + 'px';
+                ripple.style.top = e.clientY - rect.top - size/2 + 'px';
+
+                button.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 600);
+
+                console.log('Email submitted:', email);
+
+                // Show success message (will be visible briefly before redirect)
+                document.getElementById('successMessage').classList.add('show');
+
+                // Reset form value locally
+                emailInput.value = '';
+
+                // Hide success message after 5 seconds
+                setTimeout(() => {
+                    document.getElementById('successMessage').classList.remove('show');
+                }, 5000);
+
+                // Submit the form so Netlify can capture it.
+                // Use submit() (does not re-trigger the submit event) after a short delay to allow ripple animation.
+                setTimeout(() => {
+                    this.submit();
+                }, 350);
+            }
+        });
+
+        // Create Floating Particles
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * window.innerWidth + 'px';
+            particle.style.animationDelay = Math.random() * 5 + 's';
+            particle.style.animationDuration = (Math.random() * 5 + 8) + 's';
+            document.getElementById('particles').appendChild(particle);
+
+            setTimeout(() => particle.remove(), 15000);
+        }
+
+        setInterval(createParticle, 1500);
+        for (let i = 0; i < 8; i++) {
+            setTimeout(createParticle, i * 300);
+        }
+
+        // Enhanced Mouse Movement Parallax
+        let targetX = 0, targetY = 0;
+        let currentX = 0, currentY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            targetX = (e.clientX - window.innerWidth / 2) / 30;
+            targetY = (e.clientY - window.innerHeight / 2) / 30;
+        });
+
+        function animateParallax() {
+            currentX += (targetX - currentX) * 0.05;
+            currentY += (targetY - currentY) * 0.05;
+            
+            document.querySelectorAll('.gradient-orb').forEach((orb, index) => {
+                const speed = (index + 1) * 0.7;
+                orb.style.transform = `translate(${currentX * speed}px, ${currentY * speed}px)`;
+            });
+            
+            requestAnimationFrame(animateParallax);
+        }
+        animateParallax();
+
+        // Interactive Orbs - Click to create burst effect
+        document.querySelectorAll('.gradient-orb').forEach(orb => {
+            orb.addEventListener('click', function(e) {
+                // Create multiple particles on click
+                for (let i = 0; i < 10; i++) {
+                    const burstParticle = document.createElement('div');
+                    burstParticle.className = 'particle';
+                    burstParticle.style.left = e.clientX + 'px';
+                    burstParticle.style.top = e.clientY + 'px';
+                    burstParticle.style.animationDuration = '2s';
+                    burstParticle.style.transform = `translate(${Math.random() * 200 - 100}px, ${Math.random() * 200 - 100}px)`;
+                    document.getElementById('particles').appendChild(burstParticle);
+                    
+                    setTimeout(() => burstParticle.remove(), 2000);
+                }
+                
+                // Pulse effect
+                this.style.transform = 'scale(1.3)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 300);
+            });
+        });
+
+        // Keyboard interactions
+        document.addEventListener('keydown', (e) => {
+            if (e.key === ' ' || e.key === 'Enter') {
+                createParticle();
+            }
+        });
+
+        // Tilt effect on countdown items
+        document.querySelectorAll('.countdown-item').forEach(item => {
+            item.addEventListener('mousemove', (e) => {
+                const rect = item.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = (y - centerY) / 10;
+                const rotateY = (centerX - x) / 10;
+                
+                item.style.transform = `translateY(-10px) scale(1.05) perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            });
+            
+            item.addEventListener('mouseleave', () => {
+                item.style.transform = '';
+            });
+        });
+
+        // Social links: show 'Coming soon' message instead of navigating
+        document.querySelectorAll('.social-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                const toast = document.createElement('div');
+                toast.className = 'coming-soon-toast';
+                toast.setAttribute('role', 'status');
+                toast.setAttribute('aria-live', 'polite');
+                toast.textContent = 'Coming soon';
+
+                // Inline styles to avoid editing CSS files
+                toast.style.position = 'fixed';
+                toast.style.left = '50%';
+                toast.style.bottom = '30px';
+                toast.style.transform = 'translateX(-50%)';
+                toast.style.background = 'rgba(0,0,0,0.85)';
+                toast.style.color = '#fff';
+                toast.style.padding = '10px 16px';
+                toast.style.borderRadius = '6px';
+                toast.style.zIndex = '9999';
+                toast.style.fontSize = '14px';
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 200ms ease';
+
+                document.body.appendChild(toast);
+                requestAnimationFrame(() => { toast.style.opacity = '1'; });
+
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    setTimeout(() => toast.remove(), 200);
+                }, 1800);
+            });
+        });
+    </script>
+</body>
+</html>
