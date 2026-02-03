@@ -870,9 +870,7 @@
                 // Show success message (will be visible briefly before redirect)
                 document.getElementById('successMessage').classList.add('show');
 
-                // Reset form values locally
-                if (nameInput) nameInput.value = '';
-                emailInput.value = '';
+                // (Don't clear inputs before submitting — Netlify needs their values)
 
                 // Hide success message after 5 seconds
                 setTimeout(() => {
